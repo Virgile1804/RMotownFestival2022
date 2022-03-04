@@ -1,0 +1,9 @@
+<h2>Upload Picture</h2>
+
+<form [formGroup]="uploadForm" (submit)="onFormSubmit()">
+    <fieldset>
+        <legend>Picture</legend>
+        <input type="file" formControlName="file" (change)="onFileChange($event)" />
+        <input type="submit" value="Upload" />
+    </fieldset>
+</form>

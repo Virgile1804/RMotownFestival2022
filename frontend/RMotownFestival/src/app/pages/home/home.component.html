@@ -1,0 +1,78 @@
+<header>
+  <h1>
+    <img src="assets/images/templatemo_logo.png" alt="Logo" />
+  </h1>
+</header>
+
+<div>
+
+  <h2>Artists</h2>
+
+  <div class="row">
+    <div class="col" *ngFor="let artist of artists$ | async">
+      <img [src]="'assets/images/' + artist.imagePath" [alt]="'image ' + artist.name" class="img-thumbnail" />
+    </div>
+  </div>
+
+  <div><a href="#">View All</a></div>
+
+</div>
+
+<div>
+  <h2>Schedule</h2>
+  <div class="row">
+    <div class="col-sm-6" *ngFor="let scheduleDay of scheduleByDate$ | async">
+      <h3>{{ scheduleDay.date | date }}</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Hour</th>
+            <th>Artist</th>
+            <th>Stage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of scheduleDay.items">
+            <td>{{ item.time | date:'shortTime' }}</td>
+            <td>{{ item.artist.name }}</td>
+            <td>{{ item.stage.name }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div>
+  <h2>Articles</h2>
+
+  <div class="row">
+    <div class="col-sm-6">
+
+      <div class="row">
+        <div class="col-4">
+          <img src="assets/images/woodstock.jpg" alt="image" class="img-fluid" />
+        </div>
+        <div class="col-8">
+          <h3>Aerial shot</h3>
+          <p>Donec varius tempor hendrerit. Nam convallis est ut lacus ullamcorper vitae scelerisque enim lobortis. Nam ut ipsum nec magna facilisis auctor ut porttitor enim. </p>
+          <div class="button_01"><a href="#">More</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6">
+      <div class="row">
+        <div class="col-4">
+          <img src="assets/images/toiletpaper.jpg" alt="image" class="img-fluid" />
+        </div>
+        <div class="col-8">
+          <h3>Be aware</h3>
+          <p>Nunc sed pharetra dui. Donec malesuada rutrum imperdiet. Etiam nec risus sit amet diam malesuada dictum non vitae est. Vivamus ac odio eros.</p>
+          <div class="button_01"><a href="#">More</a></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
