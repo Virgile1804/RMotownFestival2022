@@ -1,11 +1,17 @@
 
+using Azure.Storage;
+using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using RMotownFestival.Api.Common;
+using RMotownFestival.Api.DAL;
 using RMotownFestival.Api.Options;
+using System;
+using System.Configuration;
 
 namespace RMotownFestival.Api
 {
@@ -21,10 +27,34 @@ namespace RMotownFestival.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<MotownDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                sqlServerOptionsAction: sqlOptions =>
+                {
+                    sqlOptions.EnableRetryOnFailure(
+                        maxRetryCount: 10,
+                        maxRetryDelay: TimeSpan.FromSeconds(30),
+                        errorNumbersToAdd: null
+                );
+                }
+
+            ));
+            
+
             services.Configure<AppSettingsOptions>(Configuration);
 
             services.AddCors();
             services.AddControllers();
+            services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_CONNECTIONSTRING"]);
+
+            //Blob (photos et gestion)
+            services.AddSingleton(p => new StorageSharedKeyCredential(
+                Configuration.GetValue<string>("Storage:AccountName"),
+                Configuration.GetValue<string>("Storage:AccountKey")));
+            services.AddSingleton(p => new BlobServiceClient(Configuration.GetValue<string>("Storage:ConnectionString")));
+            services.AddSingleton<BlobUtility>();
+            services.Configure<BlobSettingsOptions>(Configuration.GetSection("Storage"));
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
